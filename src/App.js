@@ -125,7 +125,11 @@ const App = () => {
   return (
     <Grid container justifyContent="center" alignItems="center" sx={{
       height: '100vh',
-      background: 'linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%)',
+      backgroundColor: '#0e0e10',
+      backgroundImage:
+        'radial-gradient(1200px 600px at 10% 10%, rgba(33,150,243,0.20), transparent),\n' +
+        'radial-gradient(1000px 500px at 90% 20%, rgba(156,39,176,0.18), transparent),\n' +
+        'radial-gradient(900px 450px at 30% 90%, rgba(0,200,83,0.15), transparent)',
       px: 2,
     }}>
       <Card sx={{
@@ -135,8 +139,12 @@ const App = () => {
         display: 'flex',
         flexDirection: 'column',
         borderRadius: 4,
-        boxShadow: 8,
         overflow: 'hidden',
+        border: '1px solid rgba(255,255,255,0.18)',
+        background: 'rgba(255, 255, 255, 0.08)',
+        boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
       }}>
          
         {/* Header */}
@@ -146,11 +154,6 @@ const App = () => {
             <Typography variant="h6" sx={{ lineHeight: 1 }}>Learning Assistant</Typography>
             <Typography variant="caption" sx={{ opacity: 0.9 }}>{listening ? '🎤 Listening…' : (typing ? '⌨️ Typing…' : 'Online')}</Typography>
           </Box>
-          <Tooltip title={isSpeaking ? 'Stop speech' : 'Read last message'}>
-            <IconButton onClick={() => toggleSpeak(messages[messages.length - 1]?.content || '')} color={isSpeaking ? 'error' : 'inherit'} sx={{ color: 'inherit' }}>
-              <VolumeUpIcon />
-            </IconButton>
-          </Tooltip>
         </Box>
 
         {/* Chat Area */}
