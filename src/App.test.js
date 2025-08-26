@@ -1,8 +1,22 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+jest.mock('react-speech-recognition', () => ({
+  __esModule: true,
+  default: {
+    startListening: jest.fn(),
+    stopListening: jest.fn(),
+  },
+  useSpeechRecognition: () => ({
+    transcript: '',
+    listening: false,
+    resetTranscript: jest.fn(),
+    browserSupportsSpeechRecognition: true,
+  }),
+}));
+
+test('renders header title', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const title = screen.getByRole('heading', { name: /Learning Assistant/i });
+  expect(title).toBeInTheDocument();
 });
