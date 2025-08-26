@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Grid,
@@ -9,6 +8,8 @@ import {
   IconButton,
   Typography,
   Paper,
+  Avatar,
+  Tooltip,
 } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
@@ -103,11 +104,17 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (messagesListRef.current) {
-      messagesListRef.current.scrollTo({
-        top: messagesListRef.current.scrollHeight,
+    const listElement = messagesListRef.current;
+    if (!listElement) return;
+
+    const canScrollTo = typeof listElement.scrollTo === 'function';
+    if (canScrollTo) {
+      listElement.scrollTo({
+        top: listElement.scrollHeight,
         behavior: 'smooth',
       });
+    } else {
+      listElement.scrollTop = listElement.scrollHeight;
     }
   }, [messages, typing]);
 
@@ -116,70 +123,106 @@ const App = () => {
   }
 
   return (
-    <Grid container justifyContent="center" alignItems="center" sx={{ height: '100vh', bgcolor: 'linear-gradient(to right, #e0f7fa, #f1f8e9)' }}>
-      <Card sx={{ width: '100%', maxWidth: 500, height: '90vh', display: 'flex', flexDirection: 'column', borderRadius: 3, boxShadow: 4 }}>
-        
+    <Grid container justifyContent="center" alignItems="center" sx={{
+      height: '100vh',
+      background: 'linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%)',
+      px: 2,
+    }}>
+      <Card sx={{
+        width: '100%',
+        maxWidth: 640,
+        height: { xs: '96vh', sm: '90vh' },
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: 4,
+        boxShadow: 8,
+        overflow: 'hidden',
+      }}>
+         
         {/* Header */}
-        <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 2, borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
-          <Typography variant="h6">Learning Assistant 🤖</Typography>
-          <Typography variant="body2">{listening ? '🎤 Listening...' : ''}</Typography>
+        <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Avatar sx={{ bgcolor: 'white', color: 'primary.main', width: 32, height: 32 }}>LA</Avatar>
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="h6" sx={{ lineHeight: 1 }}>Learning Assistant</Typography>
+            <Typography variant="caption" sx={{ opacity: 0.9 }}>{listening ? '🎤 Listening…' : (typing ? '⌨️ Typing…' : 'Online')}</Typography>
+          </Box>
+          <Tooltip title={isSpeaking ? 'Stop speech' : 'Read last message'}>
+            <IconButton onClick={() => toggleSpeak(messages[messages.length - 1]?.content || '')} color={isSpeaking ? 'error' : 'inherit'} sx={{ color: 'inherit' }}>
+              <VolumeUpIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
 
         {/* Chat Area */}
-        <CardContent sx={{ flex: 1, overflowY: 'auto' }} ref={messagesListRef}>
+        <CardContent sx={{ flex: 1, overflowY: 'auto', background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.9) 100%)' }} ref={messagesListRef}>
           {messages.map((msg, index) => (
-            <Box key={index} sx={{ display: 'flex', justifyContent: msg.isUser ? 'flex-end' : 'flex-start', mb: 1 }}>
+            <Box key={index} sx={{ display: 'flex', alignItems: 'flex-end', gap: 1.25, justifyContent: msg.isUser ? 'flex-end' : 'flex-start', mb: 1.25 }}>
+              {!msg.isUser && (
+                <Avatar sx={{ width: 28, height: 28, bgcolor: 'primary.light' }}>AI</Avatar>
+              )}
               <Paper
                 elevation={3}
                 sx={{
                   px: 2,
-                  py: 1,
+                  py: 1.25,
                   borderRadius: 3,
-                  maxWidth: '70%',
-                  bgcolor: msg.isUser ? 'primary.main' : 'grey.200',
-                  color: msg.isUser ? 'white' : 'black',
+                  maxWidth: '75%',
+                  bgcolor: msg.isUser ? 'primary.main' : 'background.paper',
+                  color: msg.isUser ? 'common.white' : 'text.primary',
                 }}
               >
-                {msg.content}
+                <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{msg.content}</Typography>
               </Paper>
+              {msg.isUser && (
+                <Avatar sx={{ width: 28, height: 28, bgcolor: 'secondary.light' }}>You</Avatar>
+              )}
             </Box>
           ))}
           {typing && (
-            <Typography variant="body2" color="textSecondary" sx={{ fontStyle: 'italic', ml: 1 }}>
-              AI is typing...
+            <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', ml: 1 }}>
+              AI is typing…
             </Typography>
           )}
         </CardContent>
 
         {/* Input Bar */}
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', alignItems: 'center', p: 2, borderTop: '1px solid #ddd' }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', alignItems: 'center', p: 2, gap: 1.25, borderTop: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>
           <TextField
             fullWidth
             variant="outlined"
-            size="small"
+            size="medium"
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
-            placeholder="Type your message..."
-            sx={{ borderRadius: '50px', bgcolor: 'white' }}
+            placeholder="Type your message…"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 999,
+                backgroundColor: 'background.default',
+              },
+            }}
           />
-          <IconButton 
-            onClick={() => toggleSpeak(messages[messages.length - 1]?.content || '')} 
-            color={isSpeaking ? 'error' : 'primary'}
-          >
-            <VolumeUpIcon />
-          </IconButton>
-
-
-          <IconButton type="submit" color="primary">
-            <SendIcon />
-          </IconButton>
-          <IconButton onClick={toggleListening} color={listening ? 'secondary' : 'default'}>
-            {listening ? <MicOffIcon /> : <MicIcon />}
-          </IconButton>
-          <IconButton onClick={() => resetTranscript()}>
-            <RefreshIcon />
-          </IconButton>
-          
+          <Tooltip title={isSpeaking ? 'Stop speech' : 'Read last message'}>
+            <IconButton onClick={() => toggleSpeak(messages[messages.length - 1]?.content || '')} color={isSpeaking ? 'error' : 'primary'}>
+              <VolumeUpIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Send message">
+            <span>
+              <IconButton type="submit" color="primary" disabled={!messageInput.trim()}>
+                <SendIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title={listening ? 'Stop listening' : 'Start voice input'}>
+            <IconButton onClick={toggleListening} color={listening ? 'secondary' : 'default'}>
+              {listening ? <MicOffIcon /> : <MicIcon />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Clear voice transcript">
+            <IconButton onClick={() => resetTranscript()}>
+              <RefreshIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Card>
     </Grid>
