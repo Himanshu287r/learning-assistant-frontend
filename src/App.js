@@ -30,7 +30,7 @@ const App = () => {
   async function getBotResponse(userMessage) {
     try {
       setTyping(true); // show typing indicator
-      const response = await fetch('https://leaning-assistant-backend.onrender.com', {
+      const response = await fetch('https://leaning-assistant-backend.onrender.com/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage }),
