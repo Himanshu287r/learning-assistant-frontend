@@ -19,6 +19,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import '@fontsource/roboto';
 import { keyframes } from '@emotion/react';
+import AssistantAvatar from './components/AssistantAvatar';
 
 const bgPan = keyframes`
   0% { transform: translate3d(0, 0, 0) scale(1); }
@@ -222,7 +223,7 @@ const App = () => {
         
         {/* Header */}
         <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Avatar sx={{ bgcolor: 'white', color: 'primary.main', width: 32, height: 32 }}>LA</Avatar>
+          <AssistantAvatar size={32} sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: 'white', borderColor: 'rgba(255,255,255,0.5)' }} />
           <Box sx={{ flex: 1 }}>
             <Typography variant="h6" sx={{ lineHeight: 1 }}>Learning Assistant</Typography>
             <Typography variant="caption" sx={{ opacity: 0.9 }}>{listening ? '🎤 Listening…' : (typing ? '⌨️ Typing…' : 'Online')}</Typography>
@@ -234,7 +235,7 @@ const App = () => {
           {messages.map((msg, index) => (
             <Box key={index} sx={{ display: 'flex', alignItems: 'flex-end', gap: 1.25, justifyContent: msg.isUser ? 'flex-end' : 'flex-start', mb: 1.25 }}>
               {!msg.isUser && (
-                <Avatar sx={{ width: 28, height: 28, bgcolor: 'primary.light' }}>AI</Avatar>
+                <AssistantAvatar size={28} ariaLabel="Assistant avatar" />
               )}
               <Paper
                 elevation={3}
