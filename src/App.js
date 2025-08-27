@@ -18,6 +18,25 @@ import SendIcon from '@mui/icons-material/Send';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import '@fontsource/roboto';
+import { keyframes } from '@emotion/react';
+
+const bgPan = keyframes`
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-2%, -2%, 0) scale(1.03); }
+  100% { transform: translate3d(2%, 2%, 0) scale(1); }
+`;
+
+const float1 = keyframes`
+  0% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(18px, -24px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+`;
+
+const float2 = keyframes`
+  0% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-22px, 18px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+`;
 
 const App = () => {
   const messagesListRef = useRef(null);
@@ -131,7 +150,60 @@ const App = () => {
         'radial-gradient(1000px 500px at 90% 20%, rgba(156,39,176,0.18), transparent),\n' +
         'radial-gradient(900px 450px at 30% 90%, rgba(0,200,83,0.15), transparent)',
       px: 2,
+      position: 'relative',
+      overflow: 'hidden',
     }}>
+      {/* Animated background layer */}
+      <Box sx={{
+        position: 'absolute',
+        top: -200,
+        left: -200,
+        right: -200,
+        bottom: -200,
+        background:
+          'radial-gradient(60% 80% at 20% 20%, rgba(33,150,243,0.25), rgba(33,150,243,0) 70%),' +
+          'radial-gradient(70% 60% at 80% 30%, rgba(156,39,176,0.22), rgba(156,39,176,0) 70%),' +
+          'radial-gradient(55% 70% at 40% 85%, rgba(0,200,83,0.18), rgba(0,200,83,0) 70%)',
+        filter: 'blur(60px)',
+        opacity: 0.6,
+        animation: `${bgPan} 28s ease-in-out infinite`,
+        willChange: 'transform',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }} />
+
+      {/* Floating shapes */}
+      <Box sx={{
+        position: 'absolute',
+        width: 240,
+        height: 240,
+        borderRadius: '50%',
+        top: '10%',
+        left: '6%',
+        background: 'radial-gradient(circle at 30% 30%, rgba(33,150,243,0.55), rgba(33,150,243,0) 60%)',
+        filter: 'blur(12px)',
+        opacity: 0.6,
+        animation: `${float1} 18s ease-in-out infinite`,
+        willChange: 'transform',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }} />
+      <Box sx={{
+        position: 'absolute',
+        width: 260,
+        height: 260,
+        borderRadius: '50%',
+        bottom: '12%',
+        right: '8%',
+        background: 'radial-gradient(circle at 70% 70%, rgba(156,39,176,0.5), rgba(156,39,176,0) 60%)',
+        filter: 'blur(14px)',
+        opacity: 0.55,
+        animation: `${float2} 22s ease-in-out infinite`,
+        willChange: 'transform',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }} />
+
       <Card sx={{
         width: '100%',
         maxWidth: 640,
@@ -145,8 +217,9 @@ const App = () => {
         boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
+        zIndex: 1,
       }}>
-         
+        
         {/* Header */}
         <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
           <Avatar sx={{ bgcolor: 'white', color: 'primary.main', width: 32, height: 32 }}>LA</Avatar>
