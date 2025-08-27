@@ -20,6 +20,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import '@fontsource/roboto';
 import { keyframes } from '@emotion/react';
 import AssistantAvatar from './components/AssistantAvatar';
+import MessageContent from './components/MessageContent';
 
 const bgPan = keyframes`
   0% { transform: translate3d(0, 0, 0) scale(1); }
@@ -248,7 +249,7 @@ const App = () => {
                   color: msg.isUser ? 'common.white' : 'text.primary',
                 }}
               >
-                <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{msg.content}</Typography>
+                <MessageContent>{msg.content}</MessageContent>
               </Paper>
               {msg.isUser && (
                 <Avatar sx={{ width: 28, height: 28, bgcolor: 'secondary.light' }}>You</Avatar>

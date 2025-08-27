@@ -15,6 +15,11 @@ jest.mock('react-speech-recognition', () => ({
   }),
 }));
 
+jest.mock('./components/MessageContent', () => ({
+  __esModule: true,
+  default: (props) => props.children,
+}));
+
 test('renders header title', () => {
   render(<App />);
   const title = screen.getByRole('heading', { name: /Learning Assistant/i });
